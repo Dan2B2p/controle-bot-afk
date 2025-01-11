@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        #status {
+            font-size: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: red;
+        }
+        #status.ON {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Controle do Bot AFK</h1>
+    <button id="toggleButton">ON</button>
+    <p id="status" class="OFF">Status: OFF</p>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io(); // Conectando ao servidor
+        const toggleButton = document.getElementById('toggleButton');
+        const statusText = document.getElementById('status');
+
+        // Atualizar interface com o status do bot
+        socket.on('botStatus', (status) => {
+            statusText.textContent = 'Status: ' + status;
+            statusText.className = status; // Atualiza classe CSS para cor do status
+            toggleButton.textContent = status === 'ON' ? 'OFF' : 'ON';
+        });
+
+        // Configurar o clique do botão
+        toggleButton.addEventListener('click', () => {
+            const currentStatus = statusText.textContent.includes('OFF') ? 'ON' : 'OFF';
+            socket.emit('toggleBot', currentStatus); // Envia o novo status ao servidor
+        });
+    </script>
+</body>
+</html>
