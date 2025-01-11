@@ -1,0 +1,1 @@
+# controle-bot-afk
