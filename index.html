@@ -34,16 +34,22 @@
     const button = document.getElementById('toggleButton');
 
     button.addEventListener('click', () => {
-      fetch('/toggle-bot')
+      console.log('Botão clicado'); // Verifique se o clique foi detectado
+
+      // Requisição para o backend local (localhost)
+      fetch('http://localhost:3000/toggle-bot')  <!-- Certifique-se de que a URL está correta -->
         .then(response => response.json())
         .then(data => {
+          console.log('Resposta do servidor:', data); // Verifique a resposta
           if (data.status === 'started') {
             button.textContent = 'Parar Bot';
           } else {
             button.textContent = 'Iniciar Bot';
           }
         })
-        .catch(error => console.error('Erro:', error));
+        .catch(error => {
+          console.error('Erro:', error);
+        });
     });
   </script>
 </body>
