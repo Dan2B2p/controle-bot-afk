@@ -1,55 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Bot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        #status {
-            font-size: 20px;
-            margin-top: 10px;
-            font-weight: bold;
-            color: red;
-        }
-        #status.ON {
-            color: green;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle do Bot</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+    }
+    button:active {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
-    <h1>Controle do Bot AFK</h1>
-    <button id="toggleButton">ON</button>
-    <p id="status" class="OFF">Status: OFF</p>
+  <button id="toggleButton">Iniciar Bot</button>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io(); // Conectando ao servidor
-        const toggleButton = document.getElementById('toggleButton');
-        const statusText = document.getElementById('status');
+  <script>
+    const button = document.getElementById('toggleButton');
 
-        // Atualizar a interface ao receber o status do servidor
-        socket.on('botStatus', (status) => {
-            statusText.textContent = 'Status: ' + status;
-            statusText.className = status; // Atualiza a classe para mudar a cor
-            toggleButton.textContent = status === 'ON' ? 'OFF' : 'ON';
-        });
-
-        // Enviar o status atualizado ao clicar no botão
-        toggleButton.addEventListener('click', () => {
-            const newStatus = toggleButton.textContent === 'ON' ? 'ON' : 'OFF';
-            socket.emit('toggleBot', newStatus); // Envia o novo status para o servidor
-        });
-    </script>
+    button.addEventListener('click', () => {
+      fetch('/toggle-bot')
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'started') {
+            button.textContent = 'Parar Bot';
+          } else {
+            button.textContent = 'Iniciar Bot';
+          }
+        })
+        .catch(error => console.error('Erro:', error));
+    });
+  </script>
 </body>
 </html>
