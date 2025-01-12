@@ -38,17 +38,17 @@
         const toggleButton = document.getElementById('toggleButton');
         const statusText = document.getElementById('status');
 
-        // Atualizar interface com o status do bot
+        // Atualizar a interface ao receber o status do servidor
         socket.on('botStatus', (status) => {
             statusText.textContent = 'Status: ' + status;
-            statusText.className = status; // Atualiza classe CSS para cor do status
+            statusText.className = status; // Atualiza a classe para mudar a cor
             toggleButton.textContent = status === 'ON' ? 'OFF' : 'ON';
         });
 
-        // Configurar o clique do botão
+        // Enviar o status atualizado ao clicar no botão
         toggleButton.addEventListener('click', () => {
-            const currentStatus = statusText.textContent.includes('OFF') ? 'ON' : 'OFF';
-            socket.emit('toggleBot', currentStatus); // Envia o novo status ao servidor
+            const newStatus = toggleButton.textContent === 'ON' ? 'ON' : 'OFF';
+            socket.emit('toggleBot', newStatus); // Envia o novo status para o servidor
         });
     </script>
 </body>
